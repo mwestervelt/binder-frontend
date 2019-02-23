@@ -4,6 +4,8 @@ import 'semantic-ui-css/semantic.min.css'
 import Nav from './components/Nav'
 import Signup from './components/Signup'
 import Login from './components/Login'
+import BookContainer from './components/BookContainer'
+
 
 class App extends Component {
 
@@ -47,7 +49,6 @@ class App extends Component {
   };
 
   loginUser = userObj => {
-    console.log("are we hitting this", userObj);
       const { email, password } = userObj
       fetch("http://localhost:3000/api/v1/login", {
           method: "POST",
@@ -58,7 +59,9 @@ class App extends Component {
           body: JSON.stringify({ user: { email: email, password: password } })
       })
           .then(res => res.json())
-          .then(data => console.log(data))
+          .then(data =>
+        data.error ? alert(`${data.error}`) : this.setState({ user: data.user })
+      );
   }
 
   isThereAUser = () => {
@@ -84,7 +87,9 @@ class App extends Component {
                  ) : (
                    <Redirect to="/login" />
                  )}
+                  <BookContainer />
                </div>
+
              );
            }}
          />
