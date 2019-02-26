@@ -5,12 +5,13 @@ import Nav from './components/Nav'
 import Signup from './components/Signup'
 import Login from './components/Login'
 import BookContainer from './components/BookContainer'
+import Shelf from './components/Shelf'
 
 
 class App extends Component {
 
   state = {
-    user: {}
+    user: {},
   }
 
   componentDidMount() {
@@ -87,7 +88,9 @@ class App extends Component {
                  ) : (
                    <Redirect to="/login" />
                  )}
+                  <Shelf />
                   <BookContainer />
+
                </div>
 
              );

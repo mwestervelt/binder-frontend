@@ -1,29 +1,23 @@
 import React, { Component } from 'react';
 import Book from './Book'
+import {Card} from 'semantic-ui-react'
 import { connect } from 'react-redux'
+
 
 class BookContainer extends Component {
 
-  // state = {
-  //   bookList: [],
-  // }
-
-  // componentDidMount = (q) => {
-  //   fetch(`http://localhost:3000/api/v1/books?q=${q}`)
-  //     .then(res => res.json())
-  //     .then(bookData => this.setState({bookList: bookData}))
-  // }
 
 
 render() {
+  // console.log(this.props);
   const {bookArray} = this.props
-  const bookComponents = bookArray.map(bookObj => <Book key={bookObj.title} book={bookObj}/>)
-
+  const bookComponents = bookArray.map(book => <Book key={book.previewLink} book={book} />)
     return (
       <div align="center"> <br/><br/>
-        <ul>
+      <h1>Book Container</h1>
+        <Card.Group centered>
           {bookComponents}
-        </ul>
+        </Card.Group>
       </div>
     )
   }

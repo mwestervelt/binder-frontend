@@ -49,19 +49,22 @@ class Nav extends Component {
     // console.log("nav has the search term", this.state)
     return (
         <Menu inverted>
-          <Menu.Item centered>
+          <Menu.Item>
           <SearchForm
             submitHandler={this.submitHandler}
             value={this.state.term}
-            changeHandler={this.changeHandler} /></Menu.Item>
-          <Fragment>
-            <Menu.Item position='right'
-              name="Login"
-               active
-               onClick={this.handleItemClick}
-               > <Login submitHandler={this.props.submitHandler} />
-            </Menu.Item>
-            </Fragment>
+            changeHandler={this.changeHandler} />
+          </Menu.Item>
+        <Fragment>
+          <Menu.Item
+            position='right'
+            name="Login"
+            active
+            onClick={this.handleItemClick}>
+          <Login
+            submitHandler={this.props.submitHandler} />
+          </Menu.Item>
+        </Fragment>
         </Menu>
     )
   }
