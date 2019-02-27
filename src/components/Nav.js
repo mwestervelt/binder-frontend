@@ -32,7 +32,7 @@ class Nav extends Component {
 
     submitHandler = (e) => {
       e.preventDefault()
-      fetch('http://localhost:3000/api/v1/books', {
+      fetch('http://localhost:3000/api/v1/books/search', {
         method: "POST",
         headers: {
           "content-type": "application/json"

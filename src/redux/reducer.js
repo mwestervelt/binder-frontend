@@ -1,6 +1,7 @@
 const initialState = {
   bookArray: [],
-  shelfArray: []
+  shelfArray: [],
+  chosenBook: {}
 }
 
 const reducer = (state = initialState, action) => {
@@ -11,8 +12,17 @@ const reducer = (state = initialState, action) => {
     case "ADD_TO_BOOKSHELF":
     let newBook = action.payload
     let updatedShelf = [...state.shelfArray, newBook]
-    var uniqueArray = [...new Set(updatedShelf)]
+    let uniqueArray = [...new Set(updatedShelf)]
      return {...state, shelfArray: uniqueArray}
+
+     // case 'ADD_TO_BOOKSHELF':
+     //  const newShelf = state.shelfArray.map(book => {
+     //    if (book.infoLink === action.payload.infoLink) {
+     //      return action.payload
+     //    }
+     //    return book
+     //  })
+     //  return { ...state, shelfArray: newShelf }
 
      case "REMOVE_BOOK":
      let book = action.payload
@@ -21,7 +31,6 @@ const reducer = (state = initialState, action) => {
 
     default:
       return state
-
 
     }
 }
