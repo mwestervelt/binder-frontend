@@ -1,33 +1,53 @@
-.App {
-  text-align: center;
+@import url('https://fonts.googleapis.com/css?family=Varela+Round');
+
+* {
+  font-family: 'Varela Round', sans-serif;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.App-header {
-  background-color: #282c34;
+.homepage {
+  background-image: url("https://images.unsplash.com/photo-1465433045946-ba6506ce5a59?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2400&q=80");
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100%;
+  background-size: cover;
+  width: 100%;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+}
+
+.welcome-header {
+  font-family: 'Varela Round', sans-serif;
+  font-size: 35px;
+  text-transform: uppercase;
+  font-weight: 400;
+  letter-spacing: 5px;
+}
+
+#welcomemessage {
+  font-family: 'Varela Round', sans-serif;
+  padding: 50px;
+  text-align: left;
+  color: white;
+  letter-spacing: 1px;
+
+}
+
+#formmodal {
+  font-family: 'Varela Round', sans-serif;
+  font-size: 35px;
+}
+
+.userlinks {
+  display: inline-block;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  padding: 15px;
+  text-transform: uppercase;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.container {
+  text-align: center;
+  margin-bottom: 20px;
+  background-color: rgba(25,25,25, .8);
+  box-shadow: 10px 15px 30px rgba(0, 0, 0, .20);
+  border-radius: 3px;
 }

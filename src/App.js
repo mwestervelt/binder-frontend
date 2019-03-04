@@ -1,124 +1,61 @@
 import React, { Component } from 'react';
-import { Route, Switch, Redirect, withRouter } from "react-router-dom";
-import 'semantic-ui-css/semantic.min.css'
+import { Route, Switch, withRouter } from 'react-router-dom'
+import './App.css';
+
 import Nav from './components/Nav'
 import Signup from './components/Signup'
 import Login from './components/Login'
+import Profile from './components/Profile'
+import CurrentlyReading from './components/CurrentlyReading'
 import BookContainer from './components/BookContainer'
-import Shelf from './components/Shelf'
+import WantToRead from './components/WantToRead'
+import HaveReadShelf from './components/HaveReadShelf'
+import Home from './components/Home'
+
+//redux stuff
+import { connect } from 'react-redux'
+import { setAndFetchUser } from './redux/actions'
 
 
 class App extends Component {
 
-  state = {
-    user: {},
-  }
-
-  componentDidMount() {
-    if (localStorage.getItem("token")) {
-      let token = localStorage.getItem("token");
-      fetch("http://localhost:3000/api/v1/user", {
-        headers: {
-          "content-type": "application/json",
-          Accepts: "application/json",
-          Authorization: `${token}`
-        }
-      })
-        .then(resp => resp.json())
-        .then(data =>
-          data.error ? alert(`Must Log In`) : this.setState({ user: data.user })
-        );
-    } else {
-      this.props.history.push("/login");
+  componentDidMount () {
+    const token = localStorage.getItem('token')
+    if (token) {
+      this.props.setAndFetchUser(token)
     }
   }
 
-
-  createUser = (e, userObj) => {
-    console.log("are we hitting this", userObj);
-      const { username, email, password } = userObj
-      fetch("http://localhost:3000/api/v1/users", {
-          method: "POST",
-          headers: {
-              "content-type": "application/json",
-              Accepts: "application/json"
-          },
-          body: JSON.stringify({ username, email, password})
-      })
-          .then(resp => resp.json())
-          .then(data => console.log(data))
-  };
-
-  loginUser = userObj => {
-      const { email, password } = userObj
-      fetch("http://localhost:3000/api/v1/login", {
-          method: "POST",
-          headers: {
-              "content-type": "application/json",
-              Accepts: "application/json"
-          },
-          body: JSON.stringify({ user: { email: email, password: password } })
-      })
-          .then(res => res.json())
-          .then(data =>
-        data.error ? alert(`${data.error}`) : this.setState({ user: data.user })
-      );
-  }
-
-  isThereAUser = () => {
-   return Object.keys(this.state.user).length > 0;
- };
-
   render() {
+    // console.log(this.props)
     return (
-      <div className="App">
-        {this.isThereAUser() ? (
-        <Nav user={this.state.user}/>
-        ) : (
-          <Nav submitHandler={this.loginUser} />
-        )}
+      <div>
+        <Nav />
         <Switch>
-         <Route
-           path="/"
-           render={() => {
-             return (
-               <div>
-                 {this.isThereAUser() ? (
-                "there is a user"
-                 ) : (
-                   <Redirect to="/login" />
-                 )}
-                  <Shelf />
-                  <BookContainer />
-
-               </div>
-
-             );
-           }}
-         />
-         <Route
-           path="/home"
-           render={() => {
-             return (
-               <div>
-                 {this.isThereAUser() ? "you're logged in" : <Redirect to="/login" />}
-               </div>
-             );
-           }}
-         />
-         <Route
-           path="/signup"
-           render={() => <Signup submitHandler={this.createUser} />}
-         />
-         <Route
-           path="/login"
-           render={() => <Login submitHandler={this.loginUser} />}
-         />
-       </Switch>
-
+          <Route path="/login" component={Login}/>
+          <Route path="/signup" component={Signup} />
+          <Route path="/beef" component={Profile} />
+          <Route path="/currently-reading" component={CurrentlyReading} />
+          <Route path="/read" component={HaveReadShelf} />
+          <Route path="/want-to-read" component={WantToRead} />
+          <Route path='/search-books' component={BookContainer} />
+          <Route path="/" component={Home} />
+        </Switch>
       </div>
     );
   }
 }
 
-export default withRouter(App);
+const mapStateToProps = (state) => {
+  return {
+    user: state.auth.user
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setAndFetchUser: (token) => dispatch(setAndFetchUser(token))
+  }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

@@ -1,33 +1,48 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Book from './Book'
-import {Card} from 'semantic-ui-react'
+import SearchForm from './SearchForm'
+import Links from './Links'
+import { Card } from 'semantic-ui-react'
+
+// actions&reducers
 import { connect } from 'react-redux'
+import { getBooksFromApi } from '../redux/actions'
 
 
-class BookContainer extends Component {
+class BookContainer extends React.Component {
 
+  searchHandler = (search) => {
+    fetch('https://www.googleapis.com/books/v1/volumes?q=' + search )
+    // put this after search + '&maxResults=40'
+      .then(res => res.json())
+      .then(data => this.props.getBooksFromApi(data.items))
+    }
 
-
-render() {
-  // console.log(this.props);
-  const {bookArray} = this.props
-  const bookComponents = bookArray.map(book => <Book key={book.previewLink} book={book} />)
-    return (
-      <div align="center"> <br/><br/>
-      <h1>Book Container</h1>
-        <Card.Group centered>
-          {bookComponents}
-        </Card.Group>
-      </div>
-    )
-  }
+  render() {
+      let bookComponents = this.props.booksFromAPI.map(book => <Book key={book.id} bookObj={book}/>)
+      return (
+        <div>
+          <Links/>
+          <SearchForm searchHandler={this.searchHandler}/>
+          <Card.Group centered>
+            {bookComponents}
+          </Card.Group>
+        </div>
+      )
+    }
 
 }
 
 const mapStateToProps = (state) => {
   return {
-    bookArray: state.bookArray
+    booksFromAPI: state.booksFromAPI,
   }
 }
 
-export default connect(mapStateToProps)(BookContainer)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getBooksFromApi: (books) => dispatch(getBooksFromApi(books))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BookContainer)

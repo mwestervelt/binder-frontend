@@ -1,84 +1,78 @@
-import React, { Component, Fragment} from 'react'
-// import PropTypes from 'prop-types'
-import {Menu} from "semantic-ui-react"
+import React, { Component , Fragment} from 'react';
+import Logout from './Logout'
 import Login from './Login'
-import SearchForm from './SearchForm'
+import Signup from './Signup'
+import Links from './Links'
+import { Link , NavLink} from 'react-router-dom'
 import { connect } from 'react-redux'
-import { displaySomeBooks } from '../redux/actions'
+import { Menu, Button, Segment, Container, Image, Label, Icon} from "semantic-ui-react"
 
-
-
-
-// const colors = ['violet']
-// const userExists = Object.keys(this.props.user).length > 0
 
 class Nav extends Component {
+  state = {}
 
 
-  state = {
-    term: "",
-    bookList: []
-  }
+  hideFixedMenu = () => this.setState({ fixed: false })
+  showFixedMenu = () => this.setState({ fixed: true })
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+  render() {
+      const { fixed } = this.state
+      const userExists = this.props.user
 
+      return (
+<div>
 
-  changeHandler = e => {
-      let term = e.target.value;
-      this.setState({
-        term: term
-      });
-    };
+        <Segment
+           inverted
+           textAlign='center'
+           style={{ minHeight: 100, padding: '1em 0em' }}
+           vertical >
+              <Menu
+                fixed={fixed ? 'top' : null}
+                  inverted={!fixed}
+                  pointing={!fixed}
+                  secondary={!fixed}
+                  size='large'>
+                <Container>
+                      <Menu.Item as='h1' position='left'>
+                          ReadMe <Icon name="book" />
+                      </Menu.Item>
+                      {
+                          userExists ?
+                              <Menu.Item position='right'>
+                                <Label
+                                    color='black'
+                                    size='big'
+                                    content={<NavLink to="/home">{`Welcome back, ${this.props.user.username}`}</NavLink>}
+                                    image={{avatar: true, spaced: 'right', src: this.props.user.avatar}}
+                                />
+                                <Logout />
+                              </Menu.Item>
+                              :
+                              <Fragment>
+                                  <Menu.Item position='right'>
+                                      <Login message={this.props.message}/>
+                                  </Menu.Item>
+                                  <Menu.Item>
+                                      <Signup message={this.props.message} />
+                                  </Menu.Item>
+                              </Fragment>
+                      }
 
-    submitHandler = (e) => {
-      e.preventDefault()
-      fetch('http://localhost:3000/api/v1/books/search', {
-        method: "POST",
-        headers: {
-          "content-type": "application/json"
-        },
-        body: JSON.stringify(this.state)
-      })
-      .then(res => res.json())
-      .then(array =>
-        this.props.displaySomeBooks(array)
+                  </Container>
+              </Menu>
+          </Segment>
+        
+            </div>
+
       )
-    }
-
-  render () {
-    // console.log("nav has the search term", this.state)
-    return (
-        <Menu inverted>
-          <Menu.Item>
-          <SearchForm
-            submitHandler={this.submitHandler}
-            value={this.state.term}
-            changeHandler={this.changeHandler} />
-          </Menu.Item>
-        <Fragment>
-          <Menu.Item
-            position='right'
-            name="Login"
-            active
-            onClick={this.handleItemClick}>
-          <Login
-            submitHandler={this.props.submitHandler} />
-          </Menu.Item>
-        </Fragment>
-        </Menu>
-    )
   }
-
 }
 
-
-const mapDispatchToProps = dispatch => {
+const mapStateToProps = (state) => {
   return {
-    displaySomeBooks: (array) => {
-      dispatch(displaySomeBooks(array))
-    }
+    user: state.auth.user
   }
 }
 
-
-export default connect(null, mapDispatchToProps)(Nav)
+export default connect(mapStateToProps)(Nav)

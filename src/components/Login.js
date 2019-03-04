@@ -1,72 +1,72 @@
-import React, { Component } from 'react'
-import { Button, Form, Modal, Icon, Label} from "semantic-ui-react";
+import React, { Component } from 'react';
+import { connect } from 'react-redux'
+import { loginAndFetch } from '../redux/actions'
+import { Redirect } from 'react-router-dom'
+import {Modal, Icon, Button, Label, Form} from "semantic-ui-react"
+
 
 class Login extends Component {
-  state = {
-    email: "",
-    password: ""
+
+  handleSubmit = (e) => {
+    e.preventDefault()
+    this.props.loginAndFetch(e)
+    // .then(this.props.history.push("/userfeed"))
   }
 
+  renderLoginForm = () => {
+    return (
+      <div>
+        <Modal className="formmodal" size="small" trigger={<Button >Login</Button>}>
+          <Modal.Header>User Login:</Modal.Header>
+            <Modal.Content>
 
-// handleItemClick = (e, { name }) => this.setState({ activeItem: name })
-
-
-  changeHandler = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    })
+              <Form onSubmit={this.handleSubmit}>
+                <Label pointing="below">Email:</Label>
+                <Form.Input
+                  type="text"
+                  name="email"
+                  placeholder="email"
+                  value={this.props.email}
+                />
+                <Label pointing="below">Password:</Label>
+              <Form.Input
+                  type="password"
+                  name="password"
+                  placeholder="password"
+                  value={this.props.password}
+                />
+                <br></br><br></br>
+                <Modal.Actions>
+                  <Button color='green' inverted>
+                    <Icon name='checkmark' /> Log in
+                </Button>
+              </Modal.Actions>
+          </Form>
+        </Modal.Content>
+      </Modal>
+    </div>
+  )
   }
-
-  submitHandler = e => {
-
-     e.preventDefault();
-     this.props.submitHandler(this.state);
-     this.setState({
-       email: "",
-       password: ""
-     });
-   }
 
   render() {
-
     return (
-
-      <Modal size="small" trigger={<Button>Log in</Button>}>
-        <Modal.Header>User Login:</Modal.Header>
-          <Modal.Content>
-
-            <Form onSubmit={this.submitHandler}>
-              <Label pointing="below">Email:</Label>
-              <Form.Input
-              type="text"
-              name="email"
-              placeholder="email"
-              value={this.state.email}
-              onChange={this.changeHandler}
-              />
-              <Label pointing="below">Password:</Label>
-            <Form.Input
-              type="password"
-              name="password"
-              placeholder="password"
-              value={this.state.password}
-              onChange={this.changeHandler}
-              />
-              <br></br><br></br>
-
-              <Modal.Actions>
-            <Button color='green' inverted>
-              <Icon name='checkmark' /> Log in
-              </Button>
-            </Modal.Actions>
-        </Form>
-
-
-      </Modal.Content>
-    </Modal>
+      <div>
+        {localStorage.getItem('token') ? <Redirect to='/book-search' /> : this.renderLoginForm() }
+      </div>
     )
   }
-
 }
 
-export default Login
+const mapStateToProps = (state) => {
+  return {
+    user: state.auth.user
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    loginAndFetch: (e) => dispatch(loginAndFetch(e))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

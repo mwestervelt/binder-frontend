@@ -1,85 +1,88 @@
-import React, { Component } from 'react'
-import { Button, Form, Modal, Icon, Label} from "semantic-ui-react";
+import { Button, Form, Modal, Icon, Label, Message} from "semantic-ui-react";
+import React, { Component } from 'react';
+import { signUpAndFetch } from '../redux/actions'
+import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 
 class Signup extends Component {
 
-  state = {
-    username: "",
-    email: "",
-    password: ""
-  }
-
-
-// handleItemClick = (e, { name }) => this.setState({ activeItem: name })
-
-
-
-
-  changeHandler = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    })
-  }
-
   submitHandler = (e) => {
-    console.log(this.props)
     e.preventDefault()
-    this.props.submitHandler(e, this.state)
-    this.setState({
-      name: "",
-      email: "",
-      password: ""
-    })
-    console.log("hello");
+    this.props.signUpAndFetch(e)
+    .then(<Redirect to='/profile' />)
   }
 
   render() {
-
     return (
-
+    <div>
       <Modal size="small" trigger={<Button>Sign up</Button>}>
-        <Modal.Header>Sign up!</Modal.Header>
+        <Modal.Header center>Sign up:</Modal.Header>
 
           <Modal.Content>
+            {this.props.message &&
+            <Message negative>
+              <Message.Header>{this.props.message}</Message.Header>
+            </Message>}
             <Form onSubmit={this.submitHandler}>
               <Label pointing="below">Username:</Label>
                 <Form.Input
                   type="text"
                   name="username"
                   placeholder="username"
-                  value={this.state.username}
-                  onChange={this.changeHandler}
                   />
               <Label pointing="below">Email:</Label>
                 <Form.Input
                   type="text"
                   name="email"
                   placeholder="email"
-                  value={this.state.email}
-                  onChange={this.changeHandler}
                   />
               <Label pointing="below">Password:</Label>
                 <Form.Input
                   type="password"
                   name="password"
                   placeholder="password"
-                  value={this.state.password}
-                  onChange={this.changeHandler}
+
+                  />
+                <Label pointing="below">Bio:</Label>
+                <Form.Input
+                  type="bio"
+                  name="bio"
+                  placeholder="enter a short bio"
+
+                  />
+                <Label pointing="below">Profile Pic:</Label>
+                  <Form.Input
+                  type="url"
+                  name="avatar"
+                  placeholder="profile pic URL"
+
                   />
               <br></br><br></br>
 
               <Modal.Actions>
             <Button color='green' inverted>
-              <Icon name='checkmark' /> Log in
+              <Icon name='checkmark' /> Sign up!
               </Button>
             </Modal.Actions>
             </Form>
 
       </Modal.Content>
     </Modal>
+    </div>
     )
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    user: state.auth.user
+  }
+}
 
-export default Signup
+const mapDispatchToProps = (dispatch) => {
+  return {
+    signUpAndFetch: (e) => dispatch(signUpAndFetch(e))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup)
