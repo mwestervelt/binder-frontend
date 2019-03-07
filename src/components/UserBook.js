@@ -1,14 +1,20 @@
 import React, { Component } from 'react';
+import {Card,  Button, Form, Image, Input} from "semantic-ui-react"
+
+//redux stuff
 import { connect } from 'react-redux'
-import {Card, Dropdown, Button, Image} from "semantic-ui-react"
+import { editShelf, updateBookObjs, fetchReviews, updateAndFetch } from '../redux/actions'
 
 class UserBook extends Component {
   state = {
     bookCardClicked: false,
     reviewFormClicked: false,
     categoryFormClicked: false,
-    favorited: this.props.bookObj.favorited
+    rating: null,
+    shelf_type: ""
   }
+
+  // handleRate = (e, { rating, maxRating }) => this.setState({ rating, maxRating })
 
   handleClickedImage = () => {
     this.setState({
@@ -28,83 +34,75 @@ class UserBook extends Component {
     })
   }
 
+  handleSelect = (e) => {
+    this.setState({
+      shelf_type: e.target.value
+    })
+  }
+
   handleSubmit = (e) => {
     e.preventDefault()
     let options = {
       method: 'POST',
-      headers: {'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}`},
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
       body: JSON.stringify({
         title: e.target.title.value,
         content: e.target.content.value,
-        rating: e.target.rating.value,
+        rating: 5,
+        user_id: e.target.userid.value,
         book_id: e.target.bookid.value,
-        user_id: e.target.userid.value
+
       })
     }
     fetch('http://localhost:3000/api/v1/reviews', options)
+    .then(res => res.json())
+    .then(review => console.log(review))
+    // send this to review container???????
   }
+
 
   handleChangeCategory = (e, book) => {
     e.preventDefault()
-    let user_book = this.props.user.user_books.filter(user_book => user_book.book_id === book.id)
-    fetch(`http://localhost:3000/api/v1/user_books/${user_book[0].id}`, {
-      method: "PATCH",
-      headers: {
-           "Content-Type": "application/json"
-        },
-      body: JSON.stringify({
-        shelf_type: e.target.category.value
-      })
-    })
+    let user_book = this.props.user.user_books.find(user_book => user_book.book_id === book.id)
+    console.log(user_book.shelf_type);
+    this.props.updateAndFetch(e, user_book, user_book.shelf_type)
   }
 
+    // do an action...ok
+    // find the current array of shelfbooks and filter everything that wasn't equal to chosen book
+    // RERENDER THE FUCKING PAGE
 
-  changeFavorited = (obj) => {
-    let new_favorite = !obj.favorited
-    this.setState({
-      favorited: new_favorite
-    })
-    fetch(`http://localhost:3000/api/v1//books/${obj.id}`, {
-      method: "PATCH",
-      headers: {
-        'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}`
-      },
-      body: JSON.stringify({
-        favorited: new_favorite
-      })
-    })
-  }
+
 
   renderReviewForm (){
     return (
       <div className="reviewform">
-        <form onSubmit={(e) => this.handleSubmit(e)}>
-          <div className="inputfieldsreview"><input type="text" name="title" placeholder="Review Title"/><br /></div>
-          <div className="inputfieldsreview"><textarea rows="4" cols="50" type="text" name="content" placeholder="Review content..."></textarea></div>
-            <fieldset className="rating">
-              <input type="radio" id="star5" name="rating" value="5" /><label className = "full" htmlFor="star5" title="Awesome - 5 stars"></label>
-              <input type="radio" id="star4half" name="rating" value="4" /><label className="half" htmlFor="star4half" title="Pretty good - 4.5 stars"></label>
-              <input type="radio" id="star4" name="rating" value="4" /><label className = "full" htmlFor="star4" title="Pretty good - 4 stars"></label>
-              <input type="radio" id="star3half" name="rating" value="3" /><label className="half" htmlFor="star3half" title="Meh - 3.5 stars"></label>
-              <input type="radio" id="star3" name="rating" value="3" /><label className = "full" htmlFor="star3" title="Meh - 3 stars"></label>
-              <input type="radio" id="star2half" name="rating" value="2" /><label className="half" htmlFor="star2half" title="Kinda bad - 2.5 stars"></label>
-              <input type="radio" id="star2" name="rating" value="2" /><label className = "full" htmlFor="star2" title="Kinda bad - 2 stars"></label>
-              <input type="radio" id="star1half" name="rating" value="1" /><label className="half" htmlFor="star1half" title="Meh - 1.5 stars"></label>
-              <input type="radio" id="star1" name="rating" value="1" /><label className = "full" htmlFor="star1" title="Sucks big time - 1 star"></label>
-            </fieldset>
+        <Form onSubmit={(e) => this.handleSubmit(e)}>
+          <Form.Input className="inputfieldsreview"><Input type="text" name="title" placeholder="Review Title"/><br /></Form.Input>
+          <Form.TextArea type="text" name="content" placeholder="Review content..."></Form.TextArea>
+            {/* /<Rating icon='heart'
+              defaultRating={1}
+              maxRating={5}
+              onRate={this.handleRate} >
+
+            </Rating> /*/}
             <input type="hidden" name="userid" value={this.props.user.id}/><br />
-            <input type="hidden" name="bookid" value={this.props.bookObj.id}/><br />
-            <input className="button" type="submit"/>
-        </form>
+            <input type="hidden" name="bookid" value={this.props.bookObj.id}/>
+            <Button className="button" type="submit">Send it</Button>
+        </Form>
       </div>
     )
   }
 
   render() {
+    console.log(this.props);
     return (
       <Card>
         <Card.Content textAlign="center">
-            <Card.Header >
+            <Card.Header as='h2' attached='top'>
               {this.props.bookObj.title}
               </Card.Header>
               <Card.Meta>
@@ -119,18 +117,21 @@ class UserBook extends Component {
           <div>
             <p>{this.props.bookObj.author}</p>
             <p>{this.props.bookObj.description}</p>
-            <button className="button" onClick={() => this.props.deleteBook(this.props.bookObj)}>Delete Book</button>
-            <button className="button" onClick={this.handleReviewClicked}>Leave a Review</button>
-            <button className="button" onClick={this.changeCategory}>Change Bookshelf</button>
+            <Button.Group vertical>
+              <Button onClick={this.handleReviewClicked}>Leave a Review</Button>
+              <Button onClick={this.changeCategory}>Change Bookshelf</Button>
+              <Button onClick={() => this.props.deleteBook(this.props.bookObj)}>Remove Book</Button>
+            </Button.Group> <br/><br/>
             {this.state.categoryFormClicked &&
-              <form onSubmit={(e) => this.handleChangeCategory(e, this.props.bookObj)}>
-                <select className="filter" name="category" >
-                  <option value="read">Read</option>
-                  <option value="want to read">Want to Read</option>
-                  <option value="currently reading">Currently Reading</option>
+              <form onSubmit={(e) => this.handleChangeCategory(e, this.props.bookObj)} >
+                <select className="filter" name="category" onChange={this.handleSelect}>
+                  <option value="read">Have Read</option>
+                  <option value="wantToRead">Want to Read</option>
+                  <option value="currentlyReading">Currently Reading</option>
                 </select>
                 <input className="button" type="submit" value="Submit" />
               </form>}
+
             <div>
               {this.state.reviewFormClicked ? this.renderReviewForm() : null}
             </div>
@@ -147,4 +148,14 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(UserBook)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    editShelf: (book) => dispatch(editShelf(book)),
+    updateBookObjs: (bookObjs) => dispatch(updateBookObjs(bookObjs)),
+    fetchReviews: (review) => dispatch(fetchReviews(review)),
+    updateAndFetch: (e, book, prevShelf) => dispatch(updateAndFetch(e, book, prevShelf))
+  }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserBook)

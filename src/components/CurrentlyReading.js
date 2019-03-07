@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Card } from "semantic-ui-react"
+import {Card, Header, Icon } from "semantic-ui-react"
 import UserBook from './UserBook'
 import Links from './Links'
 import { connect } from 'react-redux'
@@ -35,8 +35,13 @@ class CurrentlyReading extends Component {
     let bookCards = this.props.bookObjs !== undefined && this.props.bookObjs.map(book => <UserBook bookObj={book} key={book.id} deleteBook={this.deleteBook}/>)
     return (
       <div>
-        <Links/>
-        <h2>Currently Reading: </h2>
+        <Links/> <br/><br/>
+          <Header inverted as='h1' textAlign='center'>
+            <Header.Content>
+              <Icon name='th'/>
+                CURRENTLY READING:
+            </Header.Content>
+          </Header>
         <Card.Group centered>
         {bookCards}
         </Card.Group>

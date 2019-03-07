@@ -2,10 +2,10 @@ import React, { Component , Fragment} from 'react';
 import Logout from './Logout'
 import Login from './Login'
 import Signup from './Signup'
-import Links from './Links'
-import { Link , NavLink} from 'react-router-dom'
+// import Links from './Links'
+import { NavLink} from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Menu, Button, Segment, Container, Image, Label, Icon} from "semantic-ui-react"
+import { Menu,  Segment, Container, Label, Icon} from "semantic-ui-react"
 
 
 class Nav extends Component {
@@ -20,8 +20,7 @@ class Nav extends Component {
       const userExists = this.props.user
 
       return (
-<div>
-
+        <div>
         <Segment
            inverted
            textAlign='center'
@@ -35,7 +34,10 @@ class Nav extends Component {
                   size='large'>
                 <Container>
                       <Menu.Item as='h1' position='left'>
-                          ReadMe <Icon name="book" />
+                        <NavLink to='/'>
+                          ReadMe <Icon name="book"/>
+                        </NavLink>
+
                       </Menu.Item>
                       {
                           userExists ?
@@ -43,7 +45,7 @@ class Nav extends Component {
                                 <Label
                                     color='black'
                                     size='big'
-                                    content={<NavLink to="/home">{`Welcome back, ${this.props.user.username}`}</NavLink>}
+                                    content={<NavLink to="/profile">{`Welcome back, ${this.props.user.username}`}</NavLink>}
                                     image={{avatar: true, spaced: 'right', src: this.props.user.avatar}}
                                 />
                                 <Logout />
@@ -62,7 +64,7 @@ class Nav extends Component {
                   </Container>
               </Menu>
           </Segment>
-        
+
             </div>
 
       )

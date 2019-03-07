@@ -26,18 +26,21 @@ class Signup extends Component {
             <Form onSubmit={this.submitHandler}>
               <Label pointing="below">Username:</Label>
                 <Form.Input
+                  required
                   type="text"
                   name="username"
                   placeholder="username"
                   />
               <Label pointing="below">Email:</Label>
                 <Form.Input
+                  required
                   type="text"
                   name="email"
                   placeholder="email"
                   />
               <Label pointing="below">Password:</Label>
                 <Form.Input
+                  required
                   type="password"
                   name="password"
                   placeholder="password"
@@ -45,6 +48,7 @@ class Signup extends Component {
                   />
                 <Label pointing="below">Bio:</Label>
                 <Form.Input
+                  required
                   type="bio"
                   name="bio"
                   placeholder="enter a short bio"
@@ -52,6 +56,7 @@ class Signup extends Component {
                   />
                 <Label pointing="below">Profile Pic:</Label>
                   <Form.Input
+                    required 
                   type="url"
                   name="avatar"
                   placeholder="profile pic URL"

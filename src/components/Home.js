@@ -1,16 +1,18 @@
 import React from 'react';
-import { Segment, Image, Button, Icon} from "semantic-ui-react"
-import SearchForm from './SearchForm'
+// import { Segment, Image, Button, Icon} from "semantic-ui-react"
+// import SearchForm from './SearchForm'
+import Links from './Links'
 
 
 
 const Home = () => {
     return <div className="homepage">
+    <Links/>
         <div id="welcomemessage">
-          <h1 className="welcome-header">A welcoming welcome message:</h1>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+          <h1 className="welcome-header">welcome:</h1>
+          <p>Because that book you started 3 months ago and put down needs some love too. Keep track of your reads and discover your next book love.  </p>
         </div>
-        <SearchForm  />
+
       </div>
 
 

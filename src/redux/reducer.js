@@ -7,10 +7,15 @@ const initialState = {
   },
   bookObjs: [],
   booksFromAPI: [],
+  selectedBook: {},
+  reviews: []
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type){
+
+    case 'GET_REVIEWS':
+      return {...state, reviews: action.payload}
 
     case 'GET_BOOKS_FROM_API':
        return {...state, booksFromAPI: action.payload}
@@ -45,10 +50,28 @@ const reducer = (state = initialState, action) => {
        }
 
      case 'UPDATE_BOOK_OBJS': {
-       return { ...state,
-         bookObjs: action.payload
-       }
+       console.log("these are all the book objs:", action.payload);
+       return { ...state, bookObjs: action.payload }
      }
+
+     case 'SELECT_BOOK': {
+      return { ...state, selectedBook: action.payload }
+    }
+
+     case 'EDIT_SHELF': {
+       //current shelf minus the chosenbook
+      let bookInformation = action.payload
+      let filteredArray = state.books[bookInformation.prevShelf].filter(book => book.id !== bookInformation.book.id )
+      let addedArray = [...state.books[bookInformation.book.shelf_type], bookInformation.book]
+      return {...state,
+          books: {...state.books, [bookInformation.prevShelf]: filteredArray, [bookInformation.book.shelf_type]: addedArray },
+          bookObjs: state.bookObjs.filter(book => book.id !== bookInformation.book.book_id)
+        }
+      }
+
+
+
+
 
      case 'UPDATE_USER_FROM_FETCH': {
        return {...state,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Card } from "semantic-ui-react"
+import {Card, Header, Icon } from "semantic-ui-react"
 import UserBook from './UserBook'
 import { connect } from 'react-redux'
 import Links from './Links'
@@ -31,12 +31,17 @@ class HaveReadShelf extends Component {
     }
 
   render() {
-    // console.log(this.props.bookObjs);
+    console.log(this.props.bookObjs);
     let bookCards = this.props.bookObjs !== undefined && this.props.bookObjs.map(book => <UserBook bookObj={book} key={book.id} deleteBook={this.deleteBook}/>)
     return (
       <div>
-        <Links />
-        <h2>Books Read</h2>
+        <Links /> <br/><br/>
+          <Header inverted as='h1' textAlign='center'>
+            <Header.Content>
+              <Icon name='checkmark'/>
+                HAVE READ:
+            </Header.Content>
+          </Header>
         <Card.Group centered>
           {bookCards}
         </Card.Group>

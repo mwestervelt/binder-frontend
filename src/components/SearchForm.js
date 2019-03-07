@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-// import {Search, Input, Segment, Form, Button} from 'semantic-ui-react'
+import { Input, Header, Icon, Grid} from 'semantic-ui-react'
+import Links from './Links'
 
 
 export default class SearchForm extends Component {
@@ -9,23 +10,39 @@ export default class SearchForm extends Component {
    }
 
    changeHandler = (event) => {
-     this.setState({
-       [event.target.name]: event.target.value
-     })
+       this.setState({
+         [event.target.name]: event.target.value
+       }, () => this.props.searchHandler(this.state.term))
    }
 
 
 render() {
 
   return (
-    <div>
-    <input className="term"
-      onChange={this.changeHandler}
-      placeholder="search..."
-      value={this.state.term}
-      type="text"
-      name="term" />
-    <button className="button" onClick={() => this.props.searchHandler(this.state.term)}>Search</button>
+    <div >
+    <Links/>
+    <br/><br/>
+      <Header inverted as='h1' textAlign='center'>
+        <Header.Content>
+          <Icon name='search'/>
+            SEARCH:
+            </Header.Content>
+
+        </Header>
+        <Grid>
+          <Grid.Row centered>
+            <Grid.Column width={7}>
+            <Input
+              fluid
+              required
+              onChange={this.changeHandler}
+              placeholder="search..."
+              value={this.state.term}
+              type="text"
+              name="term" />
+    </Grid.Column>
+    </Grid.Row>
+  </Grid>
     </div>
 
   )

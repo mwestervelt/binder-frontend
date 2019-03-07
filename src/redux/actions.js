@@ -1,6 +1,10 @@
 // LOGIN && LOGOUT && SIGNUP
 // FETCHING FROM BOOKS-API && FETCHING CURRENT USER INFO
 
+
+export const selectBook = (bookObj) => ({ type: 'SELECT_BOOK', payload: bookObj })
+export const editShelf = (book, prevShelf) => ({ type: 'EDIT_SHELF', payload: {book, prevShelf} })
+
 export const getBooksFromApi = (books) => ({
   type: 'GET_BOOKS_FROM_API',
   payload: books
@@ -93,4 +97,38 @@ export const fetchingCurrentUser = (token) => {
     }
   })
   .then(resp => resp.json())
+}
+
+export const getReviews = (reviews) => ({ type: 'GET_REVIEWS', payload: reviews})
+
+export const fetchReviews = (token) => {
+  fetch('http://localhost:3000/api/v1/reviews', {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  .then(resp => resp.json())
+}
+
+export const patchShelf = (e, user_book) => {
+  // let user_book = this.props.user.user_books.find(user_book => user_book.book_id === book.id)
+  return fetch(`http://localhost:3000/api/v1/user_books/${user_book.id}`, {
+    method: "PATCH",
+    headers: {
+         "Content-Type": "application/json"
+      },
+    body: JSON.stringify({
+      shelf_type: e.target.category.value
+    })
+  })
+  .then(resp => resp.json())
+}
+
+
+export const updateAndFetch = (e, user_book, prevShelf) => {
+  console.log(prevShelf);
+  return (dispatch) => {
+    patchShelf(e, user_book)
+    .then(json => dispatch(editShelf(json.user_book, prevShelf)))
+  }
 }

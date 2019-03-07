@@ -1,7 +1,6 @@
 import React from 'react';
 import Book from './Book'
 import SearchForm from './SearchForm'
-import Links from './Links'
 import { Card } from 'semantic-ui-react'
 
 // actions&reducers
@@ -12,18 +11,21 @@ import { getBooksFromApi } from '../redux/actions'
 class BookContainer extends React.Component {
 
   searchHandler = (search) => {
+    if (search.length > 0) {
     fetch('https://www.googleapis.com/books/v1/volumes?q=' + search )
     // put this after search + '&maxResults=40'
       .then(res => res.json())
       .then(data => this.props.getBooksFromApi(data.items))
+    } else {
+       alert("please enter a search term")
+      }
     }
 
   render() {
       let bookComponents = this.props.booksFromAPI.map(book => <Book key={book.id} bookObj={book}/>)
       return (
-        <div>
-          <Links/>
-          <SearchForm searchHandler={this.searchHandler}/>
+        <div className="homepage">
+          <SearchForm className="term" searchHandler={this.searchHandler}/>
           <Card.Group centered>
             {bookComponents}
           </Card.Group>

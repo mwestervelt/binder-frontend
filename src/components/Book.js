@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Card, Dropdown, Image} from "semantic-ui-react"
+import {Card, Dropdown, Image, Button} from "semantic-ui-react"
 
 // redux stuff
 import { connect } from 'react-redux'
@@ -27,7 +27,9 @@ handleChange = (e, { value }) => {
   addToBookshelf = (e, bookObj) => {
       let options = {
         method: 'POST',
-        headers: {'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}`},
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`},
         body: JSON.stringify({
           title: this.props.bookObj.volumeInfo.title,
           author: this.props.bookObj.volumeInfo.authors[0],
@@ -41,7 +43,7 @@ handleChange = (e, { value }) => {
           method: 'POST',
           headers: {'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}`},
           body: JSON.stringify({
-            shelf_type: this.state.value,
+            shelf_type: "wantToRead",
             book_id: book.id,
             user_id: this.props.user.id,
           })
@@ -49,8 +51,9 @@ handleChange = (e, { value }) => {
           .then(resp => resp.json())
           .then(data => {console.log("are you updating?", data)
             this.props.updateUserFromFetch(data.user)
+            // find appropriate id and shovel in to wantToRead
             const ids = data.user.want_to_read.map(user_book => user_book.book_id)
-            let books = data.user.want_to_read.filter(book => ids.includes(book.id))
+            let books = data.user.books.filter(book => ids.includes(book.id))
             this.props.updateBooks(books)
           }
         )
@@ -59,29 +62,19 @@ handleChange = (e, { value }) => {
   render() {
     const { value } = this.state
     return (
-  <Card>
-  <Card.Content textAlign="center">
-      <Card.Header >
-        {this.props.bookObj.volumeInfo.title}
+      <Card>
+      <Card.Content textAlign="center">
+        <Card.Header >
+          {this.props.bookObj.volumeInfo.title}
         </Card.Header>
         <Card.Meta>
-        {this.props.bookObj.volumeInfo.authors}
-  </Card.Meta>
-  <Image  alt={this.props.bookObj.volumeInfo.title} src={this.props.bookObj.volumeInfo.imageLinks === undefined ? null : this.props.bookObj.volumeInfo.imageLinks.thumbnail}/>
+          {this.props.bookObj.volumeInfo.authors}
+        </Card.Meta>
+        <Image  alt={this.props.bookObj.volumeInfo.title} src={this.props.bookObj.volumeInfo.imageLinks === undefined ? null : this.props.bookObj.volumeInfo.imageLinks.thumbnail}/>
+      </Card.Content>
 
-  </Card.Content>
-
-
-
-
-          <Dropdown
-            placeholder='Add to Bookshelf' fluid
-            selection
-            onChange={this.handleChange}
-            onClose={(e) => this.addToBookshelf(e, this.props.bookObj)}
-            options={shelftypes}
-            value={value}/>
-        </Card>
+       <Button className="button" onClick={(e) => this.addToBookshelf(e, this.props.bookObj)}>ADD BOOK</Button>
+      </Card>
       )
     }
   }

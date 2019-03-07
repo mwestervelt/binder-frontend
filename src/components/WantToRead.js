@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Card } from "semantic-ui-react"
+import {Card, Header, Icon } from "semantic-ui-react"
 import UserBook from './UserBook'
 import { connect } from 'react-redux'
 import Links from './Links'
@@ -17,8 +17,8 @@ class WantToRead extends Component {
   }
 
   deleteBook = (obj) => {
-    let choosen_user_book = this.props.wantToRead.filter(user_book => user_book.book_id === obj.id)
-    let id = choosen_user_book[0].id
+    let choosen_user_book = this.props.wantToRead.find(user_book => user_book.book_id === obj.id)
+    let id = choosen_user_book.id
       fetch(`http://localhost:3000/api/v1/user_books/${id}`, {
         method: "DELETE"})
         .then(resp => resp.json())
@@ -28,6 +28,27 @@ class WantToRead extends Component {
         }
       )
     }
+
+  //   handleChangeCategory = (e, book) => {
+  //     e.preventDefault()
+  //     let chosen_user_book = this.props.wantToRead.filter(chosen_user_book => chosen_user_book.book_id === book.id)
+  //     fetch(`http://localhost:3000/api/v1/user_books/${chosen_user_book.id}`, {
+  //       method: "PATCH",
+  //       headers: {
+  //            "Content-Type": "application/json"
+  //         },
+  //       body: JSON.stringify({
+  //         shelf_type: e.target.category.value
+  //       })
+  //     })
+  //     .then(resp => {
+  //       this.props.updateUserFromFetch(resp)
+  //       this.getIdsFromUser()
+  //     }
+  //   )
+  // }
+
+
 
   // handleFilter = (e) => {
   //   e.preventDefault()
@@ -51,23 +72,32 @@ class WantToRead extends Component {
   // }
 
   render() {
-    let bookCards = this.props.bookObjs !== undefined && this.props.bookObjs.map(book => <UserBook bookObj={book} key={book.id} deleteBook={this.deleteBook}/>)
+    let bookCards = this.props.bookObjs !== undefined && this.props.bookObjs.map(book => <UserBook bookObj={book} key={book.id} handleChange={this.handleChangeCategory} deleteBook={this.deleteBook}/>)
     return (
       <div>
         <Links />
-        <h2 className="secondary-header user-tab-headers">Books To Read</h2>
-        <form onSubmit={(e) => this.handleFilter(e)}>
-          <select className="filter" name="filter" >
-            <option name="filter" value="A-Z">A-Z</option>
-            <option name="filter" value="Z-A">Z-A</option>
-            <option name="filter" value="Favorites">Favorites</option>
-          </select>
-          <input className="button" type="submit" />
-        </form>
+
+          <br/><br/>
+        <Header inverted as='h1' textAlign='center'>
+          <Header.Content>
+            <Icon name='arrow alternate circle right' />
+              WANT TO READ:
+              </Header.Content>
+
+          </Header>
+       {/* // <form onSubmit={(e) => this.handleFilter(e)}>
+        //   <select className="filter" name="filter" >
+        //     <option name="filter" value="A-Z">A-Z</option>
+        //     <option name="filter" value="Z-A">Z-A</option>
+        //     <option name="filter" value="Favorites">Favorites</option>
+        //   </select>
+        //   <input className="button" type="submit" />
+        // </form> */}
         <Card.Group centered>
         {bookCards}
         </Card.Group>
       </div>
+
       )
     }
   }
