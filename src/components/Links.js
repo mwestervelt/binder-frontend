@@ -14,8 +14,9 @@ const Links = () => {
         <p className="userlinks">{"Want to Read"}</p>
       </Link>
       <Link className="first after" to='/reviews'>
-        <p className="userlinks">{"Reviews"}</p>
+        <p className="userlinks">Reviews</p>
       </Link>
+
       <Link className="first after" to="/search-books" >
         <p className="userlinks">Search Books</p>
       </Link>

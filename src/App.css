@@ -23,8 +23,9 @@
 }
 
 #welcomemessage {
+  font-size: 35px;
   padding: 50px;
-  padding-right: 500px;
+  padding-right: 10px;
   text-align: left;
   color: white;
   letter-spacing: 1px;
@@ -33,7 +34,7 @@
 
 }
 
-#formmodal {
+h1 {
   font-family: 'Varela Round', sans-serif;
   font-size: 35px;
 }

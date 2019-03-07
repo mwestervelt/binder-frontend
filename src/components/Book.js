@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import {Card, Dropdown, Image, Button} from "semantic-ui-react"
+import {Card, Dropdown, Image, Button, Modal, Form, Label, Icon} from "semantic-ui-react"
 
 // redux stuff
 import { connect } from 'react-redux'
-import { updateUserFromFetch, updateBookObjs } from '../redux/actions'
+import { updateUserFromFetch, updateBookObjs, addBook } from '../redux/actions'
 
 
 const shelftypes = [
@@ -15,7 +15,15 @@ const shelftypes = [
 
 class Book extends Component {
 
-state = {}
+state = {
+  bookCardClicked: false
+}
+
+handleClickedImage = () => {
+  this.setState({
+    bookCardClicked: !this.state.bookCardClicked
+  })
+}
 
 handleChange = (e, { value }) => {
   console.log("changed dropdown", value);
@@ -54,13 +62,19 @@ handleChange = (e, { value }) => {
             // find appropriate id and shovel in to wantToRead
             const ids = data.user.want_to_read.map(user_book => user_book.book_id)
             let books = data.user.books.filter(book => ids.includes(book.id))
-            this.props.updateBooks(books)
+            this.props.updateBookObjs(books)
+            const user_book = {...data}
+            delete user_book.user
+            delete user_book.book
+            this.props.addBook(user_book)
           }
         )
       }
+      // let user_book = this.props.user.user_books.find(user_book => user_book.book_id === book.id)
+      //
+      // this.props.updateAndFetch(e, user_book, user_book.shelf_type)
 
   render() {
-    const { value } = this.state
     return (
       <Card>
       <Card.Content textAlign="center">
@@ -70,10 +84,37 @@ handleChange = (e, { value }) => {
         <Card.Meta>
           {this.props.bookObj.volumeInfo.authors}
         </Card.Meta>
-        <Image  alt={this.props.bookObj.volumeInfo.title} src={this.props.bookObj.volumeInfo.imageLinks === undefined ? null : this.props.bookObj.volumeInfo.imageLinks.thumbnail}/>
-      </Card.Content>
+        <Image
+        alt={this.props.bookObj.volumeInfo.title}
+        src={this.props.bookObj.volumeInfo.imageLinks === undefined ? null : this.props.bookObj.volumeInfo.imageLinks.thumbnail}/>
 
-       <Button className="button" onClick={(e) => this.addToBookshelf(e, this.props.bookObj)}>ADD BOOK</Button>
+        {this.state.bookCardClicked &&
+        <div>
+          <p>{this.props.bookObj.volumeInfo.author}</p>
+          <p>{this.props.bookObj.volumeInfo.description}</p>
+      </div>}
+      </Card.Content>
+      <Modal size="small" trigger={<Button  primary >Book Details</Button>}>
+        <Modal.Header>{this.props.bookObj.volumeInfo.title}</Modal.Header>
+          <Modal.Content>
+          {this.props.bookObj.volumeInfo.authors} <br/><br/>
+        {this.props.bookObj.volumeInfo.description}<br/><br/>
+
+        <Image
+        alt={this.props.bookObj.volumeInfo.title}
+        src={this.props.bookObj.volumeInfo.imageLinks === undefined ? null : this.props.bookObj.volumeInfo.imageLinks.thumbnail}/>
+
+
+              <br></br><br></br>
+              <Modal.Actions>
+
+            </Modal.Actions>
+
+      </Modal.Content>
+    </Modal>
+{this.props.user ?
+       <Button secondary onClick={(e) => this.addToBookshelf(e, this.props.bookObj)}>Add to Shelf</Button> : "" }
+
       </Card>
       )
     }
@@ -83,14 +124,17 @@ handleChange = (e, { value }) => {
 const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
-    bookObjs: state.bookObjs
+    bookObjs: state.bookObjs,
+    wantToRead: state.books.wantToRead
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     updateUserFromFetch: (user) => dispatch(updateUserFromFetch(user)),
-    updateBooks: (books) => dispatch(updateBookObjs(books))
+    updateBookObjs: (books) => dispatch(updateBookObjs(books)),
+    addBook: (books) => dispatch(addBook(books)),
+
   }
 }
 

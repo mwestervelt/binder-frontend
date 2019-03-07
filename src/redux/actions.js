@@ -4,6 +4,7 @@
 
 export const selectBook = (bookObj) => ({ type: 'SELECT_BOOK', payload: bookObj })
 export const editShelf = (book, prevShelf) => ({ type: 'EDIT_SHELF', payload: {book, prevShelf} })
+export const addBook = (user_book) => ({type:"ADD_BOOK", payload: user_book})
 
 export const getBooksFromApi = (books) => ({
   type: 'GET_BOOKS_FROM_API',
@@ -108,10 +109,10 @@ export const fetchReviews = (token) => {
     }
   })
   .then(resp => resp.json())
+  .then(data => console.log(data))
 }
 
 export const patchShelf = (e, user_book) => {
-  // let user_book = this.props.user.user_books.find(user_book => user_book.book_id === book.id)
   return fetch(`http://localhost:3000/api/v1/user_books/${user_book.id}`, {
     method: "PATCH",
     headers: {

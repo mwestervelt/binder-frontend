@@ -67,13 +67,10 @@ class UserBook extends Component {
   handleChangeCategory = (e, book) => {
     e.preventDefault()
     let user_book = this.props.user.user_books.find(user_book => user_book.book_id === book.id)
-    console.log(user_book.shelf_type);
+
     this.props.updateAndFetch(e, user_book, user_book.shelf_type)
   }
 
-    // do an action...ok
-    // find the current array of shelfbooks and filter everything that wasn't equal to chosen book
-    // RERENDER THE FUCKING PAGE
 
 
 
@@ -100,7 +97,7 @@ class UserBook extends Component {
   render() {
     console.log(this.props);
     return (
-      <Card>
+      <Card raised>
         <Card.Content textAlign="center">
             <Card.Header as='h2' attached='top'>
               {this.props.bookObj.title}

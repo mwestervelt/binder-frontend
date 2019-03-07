@@ -3,16 +3,25 @@ import {Header, Icon, Card} from "semantic-ui-react"
 import { connect } from 'react-redux'
 import Review from './Review'
 import Links from './Links'
-// import SearchReviews from './SearchReviews'
 import { fetchReviews } from '../redux/actions'
 
 class ReviewContainer extends Component {
 
+  state = {
+    reviews: []
+  }
 
+componentDidMount() {
+    fetch('http://localhost:3000/api/v1/reviews')
+    .then(resp => resp.json())
+    .then(data => {
+      this.setState({reviews: data})
+    })
+}
 
   render() {
     console.log(this.props.reviews);
-    let reviewCards = this.props.reviews.map(review => <Review key={review.id} reviewObj={review} />)
+    let reviewCards = this.state.reviews.map(review => <Review key={review.id} reviewObj={review} />)
     return (
     <div>
       <Links /> <br/><br/>
@@ -23,7 +32,7 @@ class ReviewContainer extends Component {
             </Header.Content>
 
         </Header>
-        <Card.Group>
+        <Card.Group centered>
       {reviewCards}
       </Card.Group>
     </div>

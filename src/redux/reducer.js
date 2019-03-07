@@ -20,6 +20,14 @@ const reducer = (state = initialState, action) => {
     case 'GET_BOOKS_FROM_API':
        return {...state, booksFromAPI: action.payload}
 
+    case 'ADD_BOOK':
+      let addedBook = action.payload
+      return {...state, books: {
+        read: state.books.read,
+        wantToRead: [...state.books.wantToRead, addedBook],
+        currentlyReading: state.books.currentlyReading
+      }
+}
     case 'HANDLE_LOGIN': {
       return {...state, auth: action.payload,
         books: {

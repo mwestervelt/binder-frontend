@@ -13,7 +13,7 @@ class WantToRead extends Component {
   getIdsFromUser = () => {
     const ids = this.props.user && this.props.wantToRead.map(user_book => user_book.book_id)
     let bookObjs = this.props.user && this.props.user.books.filter(book => ids.includes(book.id))
-    this.props.updateBooks(bookObjs)
+    this.props.updateBookObjs(bookObjs)
   }
 
   deleteBook = (obj) => {
@@ -28,26 +28,6 @@ class WantToRead extends Component {
         }
       )
     }
-
-  //   handleChangeCategory = (e, book) => {
-  //     e.preventDefault()
-  //     let chosen_user_book = this.props.wantToRead.filter(chosen_user_book => chosen_user_book.book_id === book.id)
-  //     fetch(`http://localhost:3000/api/v1/user_books/${chosen_user_book.id}`, {
-  //       method: "PATCH",
-  //       headers: {
-  //            "Content-Type": "application/json"
-  //         },
-  //       body: JSON.stringify({
-  //         shelf_type: e.target.category.value
-  //       })
-  //     })
-  //     .then(resp => {
-  //       this.props.updateUserFromFetch(resp)
-  //       this.getIdsFromUser()
-  //     }
-  //   )
-  // }
-
 
 
   // handleFilter = (e) => {
@@ -85,14 +65,6 @@ class WantToRead extends Component {
               </Header.Content>
 
           </Header>
-       {/* // <form onSubmit={(e) => this.handleFilter(e)}>
-        //   <select className="filter" name="filter" >
-        //     <option name="filter" value="A-Z">A-Z</option>
-        //     <option name="filter" value="Z-A">Z-A</option>
-        //     <option name="filter" value="Favorites">Favorites</option>
-        //   </select>
-        //   <input className="button" type="submit" />
-        // </form> */}
         <Card.Group centered>
         {bookCards}
         </Card.Group>
@@ -112,7 +84,7 @@ class WantToRead extends Component {
 
   const mapDispatchToProps = (dispatch) => {
     return {
-      updateBooks: (books) => dispatch(updateBookObjs(books)),
+      updateBookObjs: (books) => dispatch(updateBookObjs(books)),
       updateUserFromFetch: (user) => dispatch(updateUserFromFetch(user))
     }
   }

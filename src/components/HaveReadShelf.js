@@ -31,7 +31,6 @@ class HaveReadShelf extends Component {
     }
 
   render() {
-    console.log(this.props.bookObjs);
     let bookCards = this.props.bookObjs !== undefined && this.props.bookObjs.map(book => <UserBook bookObj={book} key={book.id} deleteBook={this.deleteBook}/>)
     return (
       <div>
