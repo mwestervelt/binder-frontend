@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import {Card, Dropdown, Image, Button, Modal, Form, Label, Icon} from "semantic-ui-react"
+import {Card, Header, Dropdown, Message, Image, Button, Modal, Form, Label, Icon} from "semantic-ui-react"
+import { Redirect, Link } from 'react-router-dom'
 
 // redux stuff
 import { connect } from 'react-redux'
@@ -16,8 +17,14 @@ const shelftypes = [
 class Book extends Component {
 
 state = {
-  bookCardClicked: false
+  bookCardClicked: false,
+  modalOpen: false
 }
+
+// handleOpen = () => this.setState({ modalOpen: true })
+//
+// handleClose = () => this.setState({ modalOpen: false })
+
 
 handleClickedImage = () => {
   this.setState({
@@ -67,12 +74,11 @@ handleChange = (e, { value }) => {
             delete user_book.user
             delete user_book.book
             this.props.addBook(user_book)
+            // alert("ya book has been added")
           }
         )
       }
-      // let user_book = this.props.user.user_books.find(user_book => user_book.book_id === book.id)
-      //
-      // this.props.updateAndFetch(e, user_book, user_book.shelf_type)
+
 
   render() {
     return (
@@ -113,8 +119,30 @@ handleChange = (e, { value }) => {
       </Modal.Content>
     </Modal>
 {this.props.user ?
-       <Button secondary onClick={(e) => this.addToBookshelf(e, this.props.bookObj)}>Add to Shelf</Button> : "" }
 
+  <Modal
+      trigger={<Button secondary onClick={(e) => this.addToBookshelf(e, this.props.bookObj)}>Add to Shelf</Button>}
+      basic
+      size='small'
+
+    >
+      <Header icon='book' content='{this.props.bookObj.volumeInfo.title} has been added' />
+      <Modal.Content>
+        <h3>Congrats. What will you do next?</h3>
+      </Modal.Content>
+      <Modal.Actions>
+
+        <Button color='green'  >
+          <Icon name='checkmark' /> Add more books, obviously.
+        </Button>
+
+        <Button color='teal' content={<Link to='/want-to-read'/>} >
+          <Icon name='checkmark' /> View my books!
+        </Button>
+      </Modal.Actions>
+    </Modal>
+        : ""
+        }
       </Card>
       )
     }

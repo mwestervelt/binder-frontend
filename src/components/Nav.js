@@ -35,7 +35,9 @@ class Nav extends Component {
                 <Container>
                       <Menu.Item as='h1' position='left'>
                         <NavLink to='/'>
-                          BookBae <Icon name="heart"/>
+                          BookBae
+                            <Icon name="heart"  color='red'/>
+
                         </NavLink>
 
                       </Menu.Item>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Input, Header, Icon, Grid} from 'semantic-ui-react'
 import Links from './Links'
+import debounce from 'lodash/debounce'
 
 
 export default class SearchForm extends Component {
@@ -9,11 +10,20 @@ export default class SearchForm extends Component {
      term: ""
    }
 
-   changeHandler = (event) => {
-       this.setState({
-         [event.target.name]: event.target.value
-       }, () => this.props.searchHandler(this.state.term))
-   }
+   // changeHandler = (event) => {
+   //     this.setState({
+   //       [event.target.name]: event.target.value
+   //     }, () => this.props.searchHandler(this.state.term))
+   // }
+
+      changeHandler = (event) => {
+
+          this.setState({
+
+            [event.target.name]: event.target.value
+          }, debounce(() => this.props.searchHandler(this.state.term), 1000))
+      }
+
 
 
 render() {
@@ -35,7 +45,7 @@ render() {
             <Input
               fluid
               required
-              onChange={this.changeHandler}
+              onChange={this.changeHandler.bind(this)}
               placeholder="search..."
               value={this.state.term}
               type="text"

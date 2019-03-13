@@ -77,10 +77,6 @@ const reducer = (state = initialState, action) => {
         }
       }
 
-
-
-
-
      case 'UPDATE_USER_FROM_FETCH': {
        return {...state,
          auth: {
@@ -94,12 +90,6 @@ const reducer = (state = initialState, action) => {
     //   let uniqueArray = new Set()
     //   let newArray = [...uniqueArray.add(newBook)]
     //     return {...state, shelf: newArray}
-    //
-    //
-    //  case "REMOVE_BOOK":
-    //   let book = action.payload
-    //   let removalShelf = state.shelf.filter(bookObj => bookObj.title !== book.title)
-    //     return {...state, shelf: removalShelf}
 
     default:
       return state

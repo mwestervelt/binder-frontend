@@ -10,6 +10,8 @@ import { getBooksFromApi } from '../redux/actions'
 
 class BookContainer extends React.Component {
 
+
+
   searchHandler = (search) => {
     if (search.length > 0) {
     fetch('https://www.googleapis.com/books/v1/volumes?q=' + search)
@@ -20,6 +22,8 @@ class BookContainer extends React.Component {
        alert("please enter a search term")
       }
     }
+
+
 
   render() {
       let bookComponents = this.props.booksFromAPI.map(book => <Book key={book.id} bookObj={book}/>)

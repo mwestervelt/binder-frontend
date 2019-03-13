@@ -15,7 +15,7 @@ class Signup extends Component {
   render() {
     return (
     <div>
-      <Modal size="small" trigger={<Button>Sign up</Button>}>
+      <Modal size="small" trigger={<Button primary >Sign up</Button>}>
         <Modal.Header center>Sign up:</Modal.Header>
 
           <Modal.Content>
@@ -56,7 +56,7 @@ class Signup extends Component {
                   />
                 <Label pointing="below">Profile Pic:</Label>
                   <Form.Input
-                    required 
+                    required
                   type="url"
                   name="avatar"
                   placeholder="profile pic URL"

@@ -16,7 +16,7 @@ class Login extends Component {
   renderLoginForm = () => {
     return (
       <div>
-        <Modal className="formmodal" size="small" trigger={<Button >Login</Button>}>
+        <Modal className="formmodal" size="small" trigger={<Button primary >Login</Button>}>
           <Modal.Header>User Login:</Modal.Header>
             <Modal.Content>
 
